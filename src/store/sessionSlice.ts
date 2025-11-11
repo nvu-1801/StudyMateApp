@@ -1,9 +1,9 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { fetchCourses } from "../services/api";
-import { getData, saveData } from "../utils/storage";
+import { saveData, getData } from "../utils/storage";
 
 export interface Session {
-  id?: string; // mock data có thể chưa có id
+  id: string;
   course_name: string;
   duration: number;
   date: string;
@@ -35,7 +35,21 @@ export const fetchSessions = createAsyncThunk("session/fetch", async () => {
 const sessionSlice = createSlice({
   name: "session",
   initialState,
-  reducers: {},
+  reducers: {
+    addSession: (state, action: PayloadAction<Session>) => {
+      state.sessions.push(action.payload);
+      saveData("sessions", state.sessions);
+    },
+    updateSession: (state, action: PayloadAction<Session>) => {
+      const index = state.sessions.findIndex(
+        (s) => s.id === action.payload.id
+      );
+      if (index !== -1) {
+        state.sessions[index] = action.payload;
+        saveData("sessions", state.sessions);
+      }
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchSessions.pending, (state) => {
@@ -52,4 +66,5 @@ const sessionSlice = createSlice({
   },
 });
 
+export const { addSession, updateSession } = sessionSlice.actions;
 export default sessionSlice.reducer;

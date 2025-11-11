@@ -20,9 +20,9 @@ export const SessionItem = ({ session }: { session: Session }) => {
 
       <View style={styles.right}>
         {session.completion ? (
-          <CheckCircle color="#4CAF50" size={24} />
+          <CheckCircle stroke="#4CAF50" size={24} />
         ) : (
-          <Clock color="#FFB300" size={24} />
+          <Clock stroke="#FFB300" size={24} />
         )}
       </View>
     </View>
